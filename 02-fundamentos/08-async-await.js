@@ -63,7 +63,7 @@ const getInfoUsuario = async( id ) => {
 }
 
 
-const id = 3;
+const id = 2;
 
 getInfoUsuario( id )
     .then( msg => {
@@ -74,5 +74,3 @@ getInfoUsuario( id )
         console.log('TODO MAL!')
         console.log( err ) 
     });
-
-
