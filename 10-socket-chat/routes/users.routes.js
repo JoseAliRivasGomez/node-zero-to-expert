@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const { check }  = require('express-validator');
 
-const { getUsers, createUser, updateUser, deleteUser, login, googleSignIn } = require('../controllers/users.controller');
+const { getUsers, createUser, updateUser, deleteUser, login, googleSignIn, renewToken } = require('../controllers/users.controller');
 const { esRolValido, emailExiste, existeUsuarioPorID } = require('../helpers/db-validators');
 
 const { validarCampos, validarJWT, esAdminRole, tieneRol } = require('../middlewares');
@@ -53,5 +53,7 @@ router.delete('/:id', [
     check('id').custom(existeUsuarioPorID),
     validarCampos
 ], deleteUser);
+
+router.get('/renew', validarJWT, renewToken );
 
 module.exports = router;
