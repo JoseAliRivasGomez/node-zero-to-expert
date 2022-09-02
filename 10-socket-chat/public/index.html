@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sign-In</title>
+</head>
+<body>
+    <h1>Google Sign-In</h1>
+    
+    <div id="g_id_onload"
+        data-client_id="114207375686-0f68g8q14lshj75obd0ejp6rk1o3bjjt.apps.googleusercontent.com"
+        data-auto_prompt="false"
+        data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-shape="rectangular"
+        data-logo_alignment="left">
+    </div>
+
+    <button id="google_signout">
+        Sing out
+    </button>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <script>
+
+        const url = (window.location.hostname.includes('localhost'))
+                    ? 'http://localhost:4000/api/auth/google'
+                    : 'https://cafe-app-2177.herokuapp.com/api/auth/google'
+
+        function handleCredentialResponse(response) {
+           
+            const body = {id_token: response.credential};
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            })
+                .then(resp => resp.json())
+                .then(resp => {
+                    localStorage.setItem('email', resp.usuario.email)
+                    console.log(resp);
+                })
+                .catch(console.warn)
+      
+        }
+
+        const button = document.getElementById('google_signout');
+        button.onclick = () => {
+            console.log(google.accounts.id);
+            google.accounts.id.disableAutoSelect();
+
+            google.accounts.id.revoke(localStorage.getItem('email'), done => {
+                localStorage.clear();
+                location.reload();
+            })
+        }
+      </script>
+</body>
+</html>
